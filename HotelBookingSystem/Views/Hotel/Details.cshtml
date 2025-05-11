@@ -1,0 +1,134 @@
+﻿@model HotelDetailsViewModel
+
+@{
+    ViewData["Title"] = "Hotel Details";
+}
+
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">@Model.Name</h2>
+        <p class="text-muted">@Model.Location</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="Hotel Image">
+        </div>
+        <div class="col-md-6">
+            <h5 class="fw-semibold mt-3 mt-md-0">Description</h5>
+            <p>@Model.Description</p>
+
+            <h6 class="fw-semibold mt-4">Address</h6>
+            <p><i class="fa-solid fa-location-dot me-2"></i>@Model.Address</p>
+
+            @if (Model.Facilities.Any())
+            {
+                <h6 class="fw-semibold mt-4">Facilities</h6>
+                <ul class="list-unstyled">
+                    @foreach (var facility in Model.Facilities)
+                    {
+                        <li><i class="fa-solid fa-circle-check text-success me-2"></i>@facility.GetDisplayName()</li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+
+    <hr class="my-5" />
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            @Html.AntiForgeryToken()
+            <h4 class="text-center mb-3">Make a Reservation</h4>
+            <form id="reservationForm">
+                <div class="mb-3">
+                    <label for="fromDate" class="form-label">Check-in Date</label>
+                    <input type="date" class="form-control" id="fromDate" name="fromDate" required />
+                </div>
+                <div class="mb-3">
+                    <label for="toDate" class="form-label">Check-out Date</label>
+                    <input type="date" class="form-control" id="toDate" name="toDate" required />
+                </div>
+                <div id="dateError" class="text-danger mb-3" style="display:none;"></div>
+
+                <button class="btn btn-primary w-100">Check Availability</button>
+            </form>
+        </div>
+        <div id="reservationResults">
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const fromDateInput = document.getElementById('fromDate');
+        const toDateInput = document.getElementById('toDate');
+        const errorDiv = document.getElementById('dateError');
+        const form = document.getElementById('reservationForm');
+        const resultContainer = document.getElementById('reservationResults');
+
+        const today = new Date().toISOString().split('T')[0];
+        fromDateInput.setAttribute('min', today);
+        toDateInput.setAttribute('min', today);
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const from = new Date(fromDateInput.value);
+            const to = new Date(toDateInput.value);
+
+            if (from > to) {
+                e.preventDefault();
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = 'The check-out date must be after the check-in date.';
+                resultContainer.innerHTML = '';
+                return;
+            }
+
+            const query = `hotelId=${@Model.Id}&fromDate=${fromDateInput.value}&toDate=${toDateInput.value}`;
+
+            const response = await fetch(`/reservation/getAvailableRooms?${query}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                }
+            });
+
+            const html = await response.text();
+            resultContainer.innerHTML = html;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('reservationResults').addEventListener('click', async function (event) {
+                if (event.target && event.target.classList.contains('reserve-btn')) {
+                    const roomId = event.target.dataset.roomId;
+                    const fromDate = new Date(fromDateInput.value);
+                    const toDate = new Date(toDateInput.value);
+
+                    const response = await fetch('/reservation/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                        },
+                        body: JSON.stringify({
+                            hotelId: @Model.Id,
+                            roomId: roomId,
+                            fromDate: fromDate,
+                            toDate: toDate
+                        })
+                    });
+
+                    if (response.ok) {
+                        window.location.href = '/reservation/mine';
+                    } else {
+                        alert("Somenthing get wrong. Please try again later. If the problem persists, please contact support.")
+                    }
+                }
+            });
+        });
+
+    </script>
+}

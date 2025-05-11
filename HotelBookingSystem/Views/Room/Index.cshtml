@@ -1,0 +1,93 @@
+﻿@model IEnumerable<ListHotelsRoomsViewModel>
+
+@{
+    ViewData["Title"] = "All Rooms";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/room.css" />
+}
+
+<div class="container mt-5">
+
+    @if(!Model.Any())
+    {
+        <div class="alert alert-secondary text-center" role="alert">
+            No hotels found.
+        </div>
+    }
+
+    <div class="list-group">
+       @foreach (var hotel in Model)
+       {
+            <div class="list-group-item hotel-item" 
+                data-bs-toggle=@(hotel.HasRooms ? "collapse" : "") 
+                data-bs-target="#hotel-@hotel.HotelId" 
+                aria-expanded="false"
+            >
+                <span><i class="fa-solid fa-hotel me-2"></i>@hotel.HotelName</span>
+                @if (hotel.HasRooms)
+                {
+                    <i class="fa-solid fa-chevron-right rotate-icon collapsed"></i>
+                }
+            </div>
+            @if (hotel.HasRooms)
+            {
+                <div class="collapse room-list" id="hotel-@hotel.HotelId">
+                    <div class="list-group">
+                        @foreach (var room in hotel.Rooms)
+                        {
+                            <div class="list-group-item room-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fa-solid fa-bed me-2"></i>
+                                    Room @room.Number — @room.Capacity.ToString()
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="badge bg-primary rounded-pill">
+                                        @room.PricePerDay.ToString("0.00")$ per night
+                                    </span>
+                                    <a asp-action="Delete" asp-route-id="@room.Id"
+                                       class="btn p-0 text-danger @(room.HasCurrentOrFutureReservations ? "disabled" : "")"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top"
+                                       title="@(room.HasCurrentOrFutureReservations ? "Has active reservations" : "Delete")">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+
+                                    <a asp-action="Edit" asp-route-id="@room.Id"
+                                       class="btn p-0 text-warning  @(room.HasCurrentOrFutureReservations ? "disabled" : "")"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top"
+                                       title="@(room.HasCurrentOrFutureReservations ? "Has active reservations" : "Edit")">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+       }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.hotel-item').forEach(item => {
+            const targetId = item.getAttribute('data-bs-target');
+
+            const collapseEl = document.querySelector(targetId);
+            if (collapseEl) {
+                const icon = item.querySelector('.rotate-icon');
+
+                collapseEl.addEventListener('show.bs.collapse', () => {
+                    icon.classList.remove('collapsed');
+                });
+
+                collapseEl.addEventListener('hide.bs.collapse', () => {
+                    icon.classList.add('collapsed');
+                });
+            }
+        });
+    </script>
+}

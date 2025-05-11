@@ -1,0 +1,52 @@
+﻿@model RoomFormBindingModel
+
+@{
+    this.ViewData["Title"] = "Create Room";
+}
+
+<div class="row">
+    <div class="offset-md-4 col-md-4 mt-5">
+        <form asp-action="create" method="post">
+            <h2 class="text-center">Create a new room</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <select asp-for="@Model.Capacity" class="form-select">
+                    @foreach (var capacity in (RoomCapacityType[])Enum.GetValues(typeof(RoomCapacityType)))
+                    {
+                        <option value="@((int)capacity)">@capacity.GetDisplayName()</option>
+                    }
+                </select>
+                <label asp-for="@Model.Capacity">Capacity</label>
+                <span asp-validation-for="@Model.Capacity" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea asp-for="@Model.PricePerDay" class="form-control"></textarea>
+                <label asp-for="@Model.PricePerDay">Price</label>
+                <span asp-validation-for="@Model.PricePerDay" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea asp-for="@Model.Number" class="form-control"></textarea>
+                <label asp-for="@Model.Number">Number</label>
+                <span asp-validation-for="@Model.Number" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="@Model.HotelId" class="form-select">
+                    @foreach (var location in Model.Hotels)
+                    {
+                        <option value="@location.Id">@location.Name</option>
+                    }
+                </select>
+                <label asp-for="@Model.HotelId">Hotel</label>
+                <span asp-validation-for="@Model.HotelId" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

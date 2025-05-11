@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MineReservationViewModel>
+
+@{
+    ViewData["Title"] = "My Reservations";
+}
+
+<div class="container-fluid mt-5">
+    <h2 class="mt-4 mb-4">My Reservations</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">You don't have any reservations yet.</div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var reservation in Model)
+            {
+                <div class="list-group-item p-4 mb-3 shadow-sm rounded border d-flex flex-column flex-md-row justify-content-between align-items-start">
+                    <div>
+                        <h5 class="mb-2">
+                            <i class="fa-solid fa-hotel me-2 text-primary"></i>
+                            @reservation.HotelName
+                        </h5>
+                        <p class="mb-1">
+                            <strong>Location:</strong> @reservation.Location <br />
+                            <strong>From:</strong> @reservation.FromDate.ToString("dd MMM yyyy") <br />
+                            <strong>To:</strong> @reservation.ToDate.ToString("dd MMM yyyy") <br />
+                            <strong>Duration:</strong> @reservation.TotalDays day(s)
+                        </p>
+                    </div>
+                    <div class="text-end mt-3 mt-md-0">
+                        <p class="mb-1">
+                            <strong>Price per day:</strong> @reservation.PricePerDay.ToString("0.00")$ <br />
+                            <strong>Total price:</strong> <span class="text-success fw-bold">@reservation.TotalPrice.ToString("0.00")$</span>
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

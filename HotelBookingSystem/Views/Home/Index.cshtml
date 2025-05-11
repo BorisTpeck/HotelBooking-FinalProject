@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">
+            <i class="fa-solid fa-hotel me-2"></i>Welcome to Hotel Booking
+        </h1>
+        <p class="lead text-muted">Book the best hotels at the best prices — fast, easy, and secure.</p>
+        <a asp-controller="Hotel" asp-action="Index" class="btn btn-primary btn-lg mt-3">
+            <i class="fa-solid fa-magnifying-glass-location me-2"></i>Search Hotels
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <img src="https://source.unsplash.com/400x250/?hotel" class="card-img-top" alt="Hotel image">
+                <div class="card-body">
+                    <h5 class="card-title">Luxurious Hotels</h5>
+                    <p class="card-text text-muted">Explore premium hotels with exceptional comfort and service.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <img src="https://source.unsplash.com/400x250/?travel" class="card-img-top" alt="Travel image">
+                <div class="card-body">
+                    <h5 class="card-title">Perfect for Every Trip</h5>
+                    <p class="card-text text-muted">Whether it's a family vacation or a business trip — we’ve got you covered.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <img src="https://source.unsplash.com/400x250/?bedroom" class="card-img-top" alt="Room image">
+                <div class="card-body">
+                    <h5 class="card-title">Comfortable Rooms</h5>
+                    <p class="card-text text-muted">Modern and clean rooms for all budgets and preferences.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <h4>Trusted by hundreds of travelers every day.</h4>
+        <p class="text-muted">Your comfort is our priority.</p>
+    </div>
+</div>
+

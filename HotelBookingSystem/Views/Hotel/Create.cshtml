@@ -1,0 +1,61 @@
+﻿@model HotelFormBindingModel
+
+@{
+    this.ViewData["Title"] = "Create Hotel";
+}
+
+<div class="row">
+    <div class="offset-md-4 col-md-4 mt-5">
+        <form asp-action="create" method="post">
+            <h2 class="text-center">Create a new hotel</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="@Model.Name" class="form-control" />
+                <label asp-for="@Model.Name">Name</label>
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea asp-for="@Model.Description" class="form-control"></textarea>
+                <label asp-for="@Model.Description">Description</label>
+                <span asp-validation-for="@Model.Description" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="@Model.ImageUrl" class="form-control" />
+                <label asp-for="@Model.ImageUrl">Image Url</label>
+                <span asp-validation-for="@Model.ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="@Model.Address" class="form-control"/>
+                <label asp-for="@Model.Address">Address</label>
+                <span asp-validation-for="@Model.Address" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <select asp-for="@Model.SelectedLocationId" class="form-select">
+                    @foreach (var location in Model.Locations)
+                    {
+                        <option value="@location.Id">@location.Name</option>
+                    }
+                </select>
+                <label asp-for="@Model.SelectedLocationId">Location</label>
+                <span asp-validation-for="@Model.SelectedLocationId" class="text-danger"></span>
+            </div>
+            <div class="mb-3 position-relative">
+                <select asp-for="@Model.SelectedFacilityIds" class="selectpicker" title="Facility">
+                    @foreach (var facility in Model.Facilities)
+                    {
+                        <option value="@facility.Id">@facility.Type.GetDisplayName()</option>
+                    }
+                </select>
+            </div>
+
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
