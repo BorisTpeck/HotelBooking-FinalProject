@@ -1,0 +1,5 @@
+1. double click on the shortcut in the Project file
+2. go into HotelBookingSystem
+3. look for appsettings.json
+4. change the dot in the connection string to the computer's SQL server
+5. the program should be able to be started now
